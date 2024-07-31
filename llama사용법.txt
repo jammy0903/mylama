@@ -1,0 +1,43 @@
+1. 여기에서 일단 LLM을 다운받는다. 
+<다운받을 라마의 허깅페이스 홈페이지 >
+
+https://huggingface.co/teddylee777/Llama-3-Open-Ko-8B-gguf
+
+2. Modelfile을 생성한다. 
+
+FROM ./Llama-3-Open-Ko-8B-Q8_0.gguf
+
+TEMPLATE """{{- if .System }}
+<s>{{ .System }}</s>
+{{- end }}
+<s>Human:
+{{ .Prompt }}</s>
+<s>Assistant:
+"""
+
+SYSTEM """A chat between a curious user and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the user's questions."""
+
+PARAMETER temperature 0
+PARAMETER num_predict 3000
+PARAMETER num_ctx 4096
+PARAMETER stop <s>
+PARAMETER stop </s>
+
+3. GGUF와 Modelfile이 있는 디렉토리로 이동해서 다음 명령어를 실행하여 Ollama에 모델을 생성한다.
+ 
+ ollama create llama-3-ko-8b -f Modelfile 
+ 
+4. 실행한다. 
+ ollama run llama-3-ko-8b
+ 
+주의사항:
+
+GGUF 파일의 정확한 이름을 사용해야 합니다. 파일 이름이 다르다면 Modelfile의 FROM 줄을 적절히 수정해야 합니다.
+Ollama가 설치되어 있고 PATH에 추가되어 있어야 합니다.
+큰 모델 파일을 다루므로 충분한 디스크 공간과 메모리가 필요합니다.
+
+
+
+
+
+http://localhost:11434/
